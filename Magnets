@@ -1,0 +1,204 @@
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local hitboxSize = 50 -- Default hitbox size
+local hitboxStrength = 50 -- Default hitbox strength
+
+local function createSlider(name, min, max, default, callback)
+    local slider = Instance.new("ScreenGui")
+    local frame = Instance.new("Frame")
+    local textLabel = Instance.new("TextLabel")
+    local sliderBar = Instance.new("Frame")
+    local sliderButton = Instance.new("TextButton")
+
+    slider.Name = name
+    slider.Parent = player:WaitForChild("PlayerGui")
+
+    frame.Size = UDim2.new(0, 200, 0, 50)
+    frame.Position = UDim2.new(0.5, -100, 0.9, -25)
+    frame.Parent = slider
+
+    textLabel.Size = UDim2.new(1, 0, 0.5, 0)
+    textLabel.Text = name
+    textLabel.Parent = frame
+
+    sliderBar.Size = UDim2.new(1, -20, 0.5, -10)
+    sliderBar.Position = UDim2.new(0, 10, 0.5, 5)
+    sliderBar.BackgroundColor3 = Color3.new(0.8, 0.8, 0.8)
+    sliderBar.Parent = frame
+
+    sliderButton.Size = UDim2.new(0, 10, 1, 0)
+    sliderButton.BackgroundColor3 = Color3.new(0.5, 0.5, 0.5)
+    sliderButton.Parent = sliderBar
+
+    local function updateSlider(input)
+        local scale = math.clamp((input.Position.X - sliderBar.AbsolutePosition.X) / sliderBar.AbsoluteSize.X, 0, 1)
+        sliderButton.Position = UDim2.new(scale, -5, 0, 0)
+        local value = min + (max - min) * scale
+        callback(value)
+    end
+
+    sliderButton.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            updateSlider(input)
+            local moveConnection
+            moveConnection = game:GetService("UserInputService").InputChanged:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseMovement then
+                    updateSlider(input)
+                end
+            end)
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    moveConnection:Disconnect()
+                end
+            end)
+        end
+    end)
+
+    updateSlider({Position = Vector2.new(sliderBar.AbsolutePosition.X + sliderBar.AbsoluteSize.X * (default - min) / (max - min), 0)})
+end
+
+local function increaseHitbox(part)
+    if part.Name == "Football" then
+        local hitbox = Instance.new("Part")
+        hitbox.Size = Vector3.new(hitboxSize, hitboxSize, hitboxSize)
+        hitbox.Transparency = 1
+        hitbox.CanCollide = false
+        hitbox.Anchored = true
+        hitbox.CFrame = part.CFrame
+
+        hitbox.Parent = part
+
+        local function onTouched(otherPart)
+            local otherCharacter = otherPart.Parent
+            if otherCharacter and otherCharacter:IsA("Model") and otherCharacter:FindFirstChild("Humanoid") then
+                local distance = (part.Position - otherPart.Position).Magnitude
+                if distance <= hitboxSize * (hitboxStrength / 100) then
+                    -- Add your logic for catching the ball here
+                end
+            end
+        end
+
+        hitbox.Touched:Connect(onTouched)
+    end
+end
+
+local function onChildAdded(child)
+    increaseHitbox(child)
+end
+
+workspace.ChildAdded:Connect(onChildAdded)
+
+for _, child in ipairs(workspace:GetChildren()) do
+    increaseHitbox(child)
+end
+
+createSlider("Hitbox Size", 0, 100, hitboxSize, function(value)
+    hitboxSize = value
+end)
+
+createSlider("Hitbox Strength", 0, 100, hitboxStrength, function(value)
+    hitboxStrength = value
+end)
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local hitboxSize = 50 -- Default hitbox size
+local hitboxStrength = 50 -- Default hitbox strength
+
+local function createSlider(name, min, max, default, callback)
+    local slider = Instance.new("ScreenGui")
+    local frame = Instance.new("Frame")
+    local textLabel = Instance.new("TextLabel")
+    local sliderBar = Instance.new("Frame")
+    local sliderButton = Instance.new("TextButton")
+
+    slider.Name = name
+    slider.Parent = player:WaitForChild("PlayerGui")
+
+    frame.Size = UDim2.new(0, 200, 0, 50)
+    frame.Position = UDim2.new(0.5, -100, 0.9, -25)
+    frame.Parent = slider
+
+    textLabel.Size = UDim2.new(1, 0, 0.5, 0)
+    textLabel.Text = name
+    textLabel.Parent = frame
+
+    sliderBar.Size = UDim2.new(1, -20, 0.5, -10)
+    sliderBar.Position = UDim2.new(0, 10, 0.5, 5)
+    sliderBar.BackgroundColor3 = Color3.new(0.8, 0.8, 0.8)
+    sliderBar.Parent = frame
+
+    sliderButton.Size = UDim2.new(0, 10, 1, 0)
+    sliderButton.BackgroundColor3 = Color3.new(0.5, 0.5, 0.5)
+    sliderButton.Parent = sliderBar
+
+    local function updateSlider(input)
+        local scale = math.clamp((input.Position.X - sliderBar.AbsolutePosition.X) / sliderBar.AbsoluteSize.X, 0, 1)
+        sliderButton.Position = UDim2.new(scale, -5, 0, 0)
+        local value = min + (max - min) * scale
+        callback(value)
+    end
+
+    sliderButton.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            updateSlider(input)
+            local moveConnection
+            moveConnection = game:GetService("UserInputService").InputChanged:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseMovement then
+                    updateSlider(input)
+                end
+            end)
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    moveConnection:Disconnect()
+                end
+            end)
+        end
+    end)
+
+    updateSlider({Position = Vector2.new(sliderBar.AbsolutePosition.X + sliderBar.AbsoluteSize.X * (default - min) / (max - min), 0)})
+end
+
+local function increaseHitbox(part)
+    if part.Name == "Football" then
+        local hitbox = Instance.new("Part")
+        hitbox.Size = Vector3.new(hitboxSize, hitboxSize, hitboxSize)
+        hitbox.Transparency = 1
+        hitbox.CanCollide = false
+        hitbox.Anchored = true
+        hitbox.CFrame = part.CFrame
+
+        hitbox.Parent = part
+
+        local function onTouched(otherPart)
+            local otherCharacter = otherPart.Parent
+            if otherCharacter and otherCharacter:IsA("Model") and otherCharacter:FindFirstChild("Humanoid") then
+                local distance = (part.Position - otherPart.Position).Magnitude
+                if distance <= hitboxSize * (hitboxStrength / 100) then
+                    -- Add your logic for catching the ball here
+                end
+            end
+        end
+
+        hitbox.Touched:Connect(onTouched)
+    end
+end
+
+local function onChildAdded(child)
+    increaseHitbox(child)
+end
+
+workspace.ChildAdded:Connect(onChildAdded)
+
+for _, child in ipairs(workspace:GetChildren()) do
+    increaseHitbox(child)
+end
+
+createSlider("Hitbox Size", 0, 100, hitboxSize, function(value)
+    hitboxSize = value
+end)
+
+createSlider("Hitbox Strength", 0, 100, hitboxStrength, function(value)
+    hitboxStrength = value
+end)
