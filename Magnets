@@ -1,8 +1,8 @@
 local player = game.Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 
-local hitboxSize = 50 -- Default hitbox size
-local hitboxStrength = 50 -- Default hitbox strength
+local hitboxSize = 50
+local hitboxStrength = 50
 
 local function createSlider(name, min, max, default, callback)
     local slider = Instance.new("ScreenGui")
@@ -74,7 +74,6 @@ local function increaseHitbox(part)
             if otherCharacter and otherCharacter:IsA("Model") and otherCharacter:FindFirstChild("Humanoid") then
                 local distance = (part.Position - otherPart.Position).Magnitude
                 if distance <= hitboxSize * (hitboxStrength / 100) then
-                    -- Add your logic for catching the ball here
                 end
             end
         end
@@ -103,8 +102,8 @@ end)
 local player = game.Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 
-local hitboxSize = 50 -- Default hitbox size
-local hitboxStrength = 50 -- Default hitbox strength
+local hitboxSize = 50
+local hitboxStrength = 50
 
 local function createSlider(name, min, max, default, callback)
     local slider = Instance.new("ScreenGui")
@@ -176,7 +175,6 @@ local function increaseHitbox(part)
             if otherCharacter and otherCharacter:IsA("Model") and otherCharacter:FindFirstChild("Humanoid") then
                 local distance = (part.Position - otherPart.Position).Magnitude
                 if distance <= hitboxSize * (hitboxStrength / 100) then
-                    -- Add your logic for catching the ball here
                 end
             end
         end
